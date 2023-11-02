@@ -25,7 +25,7 @@ export default function Mint() {
             type="number"
           />
         </div>
-        <button className="w-full bg-gray-dark border-2 border-gray-medium b font-ibm font-semibold hover:text-opacity-80 text-purple p-4 rounded-lg">
+        <button className="w-full bg-gray-dark border-2 border-gray-medium font-ibm font-semibold text-xl hover:text-opacity-80 text-purple p-4 rounded-lg">
           MINT
         </button>
       </div>
