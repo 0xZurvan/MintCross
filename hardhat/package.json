@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.18.3"
+  },
+  "dependencies": {
+    "@layerzerolabs/solidity-examples": "^1.0.0",
+    "@openzeppelin/contracts": "^4.4.1"
+  }
+}
