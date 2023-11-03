@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import ConnectWallet from "./ConnectWallet";
 
 export default function DesktopNav() {
   return (
@@ -9,7 +10,7 @@ export default function DesktopNav() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "bg-purple text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4 rounded-l-lg"
+              ? "bg-purple text-white text-sm font-ibm font-semibold p-4 rounded-l-lg"
               : "text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4 rounded-l-lg"
           }
         >
@@ -19,7 +20,7 @@ export default function DesktopNav() {
           to="/bridge"
           className={({ isActive }) =>
             isActive
-              ? "bg-purple text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4"
+              ? "bg-purple text-white text-sm font-ibm font-semibold p-4"
               : "text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4"
           }
         >
@@ -29,16 +30,14 @@ export default function DesktopNav() {
           to="/docs"
           className={({ isActive }) =>
             isActive
-              ? "bg-purple text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4 rounded-r-lg"
+              ? "bg-purple text-white text-sm font-ibm font-semibold p-4 rounded-r-lg"
               : "text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4 rounded-r-lg"
           }
         >
           DOCS
         </NavLink>
       </ul>
-      <button className="bg-purple font-ibm font-semibold hover:bg-gray-medium text-white py-4 px-4 rounded-lg">
-        Connect Wallet
-      </button>
+      <ConnectWallet />
     </div>
   );
 }
