@@ -5,18 +5,16 @@ import "../solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract MintCross is NonblockingLzApp, ERC20 {
-    uint256 public s_maxSupply;
+    uint256 public s_maxSupply = 1000000000000 * (10**decimals());
     uint16 s_destChainId;
     // packet type
     uint16 public constant PT_SEND = 0;
 
     constructor(
         address _lzEndpoint,
-        uint16 _destChainId,
-        uint256 _maxSupply
+        uint16 _destChainId
     ) NonblockingLzApp(_lzEndpoint) ERC20("MintCross", "MCs") {
         s_destChainId = _destChainId;
-        s_maxSupply = _maxSupply;
     }
 
     function buy(uint256 _amount) external {

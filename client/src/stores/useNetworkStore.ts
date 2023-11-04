@@ -7,6 +7,7 @@ interface Store {
   toggleModal: (bool: boolean) => void;
   switchNetwork: (_chainId: number) => Promise<void>;
 }
+
 export const connector = new MetaMaskConnector();
 
 export const useNetworkStore = create<Store>()((set, get) => ({
@@ -21,7 +22,6 @@ export const useNetworkStore = create<Store>()((set, get) => ({
       set({
         currentChainId: chainId,
       });
-
       get().toggleModal(false);
     } catch (error) {
       console.error(error);

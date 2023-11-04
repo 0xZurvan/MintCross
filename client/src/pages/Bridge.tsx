@@ -1,6 +1,10 @@
 import Button from "../components/Button";
+import ConnectWallet from "../components/ConnectWallet";
+import { useAccount } from "wagmi";
 
 export default function Bridge() {
+  const { isConnected } = useAccount();
+
   return (
     <div className="flex flex-col items-center space-y-10 bg-gray-dark w-[min(44vw)] mx-auto p-8 rounded-lg">
       <h1 className="text-white text-3xl font-ibm font-bold text-center">
@@ -27,7 +31,11 @@ export default function Bridge() {
             type="number"
           />
         </div>
-        <Button title="BRIDGE" className="w-full text-xl" onClick={() => {}} />
+        {isConnected ? (
+          <Button title="BRIDGE" className="w-full text-xl" onClick={() => {}} />
+        ) : (
+          <ConnectWallet className="w-full" />
+        )}
       </div>
     </div>
   )

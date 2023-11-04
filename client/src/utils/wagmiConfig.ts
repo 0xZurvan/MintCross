@@ -1,4 +1,4 @@
-import { polygonMumbai, sepolia } from '@wagmi/core/chains'
+import { polygonMumbai, sepolia } from 'wagmi/chains'
 import { configureChains, createConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
  
@@ -7,7 +7,7 @@ const { publicClient, webSocketPublicClient } = configureChains(
   [publicProvider()],
 )
 
-export const wagmiConfig = createConfig({
+export const config = createConfig({
   autoConnect: true,
   publicClient,
   webSocketPublicClient
