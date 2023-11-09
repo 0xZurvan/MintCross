@@ -1,4 +1,4 @@
-import layerzero from "../assets/layerzero.svg";
+import layerzero from "../../assets/layerzero.svg";
 
 export default function Footer() {
   return (

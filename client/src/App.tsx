@@ -1,20 +1,25 @@
-import DesktopNav from "./components/DesktopNav";
-import Footer from "./components/Footer";
+import DesktopNav from "./components/common/DesktopNav.tsx";
+import Footer from "./components/common/Footer.tsx";
 import Mint from "./pages/Mint";
 import Bridge from "./pages/Bridge";
 import SwitchNetworkModal from "./components/SwitchNetworkModal";
 import Docs from "./pages/Docs";
 import { Routes, Route } from "react-router-dom";
-import { WagmiConfig, useNetwork } from "wagmi";
+import { WagmiConfig, useNetwork, useAccount } from "wagmi";
 import { config } from "./utils/wagmiConfig.ts";
 import { useMintCrossStore } from "../src/stores/useMintCrossStore";
+import { useNetworkStore } from "../src/stores/useNetworkStore";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
 
 function App() {
   const { chain } = useNetwork();
+  const { isConnected } = useAccount();
   const [setAddress] = useMintCrossStore(
     useShallow((state) => [state.setAddress, state.mintCrossAddress])
+  );
+  const [setCurrentNetwork, setChains] = useNetworkStore(
+    useShallow((state) => [state.setCurrentNetwork, state.setChains])
   );
 
   useEffect(() => {
@@ -22,8 +27,18 @@ function App() {
       setAddress(chain?.id);
     };
 
+    const _setCurrentNetwork = () => {
+      setCurrentNetwork(chain?.id);
+    };
+
+    const _setChains = () => {
+      setChains(chain?.id);
+    };
+
     _setAddress();
-  }, [chain]);
+    _setCurrentNetwork();
+    _setChains();
+  }, [chain, isConnected]);
 
   return (
     <WagmiConfig config={config}>
