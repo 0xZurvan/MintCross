@@ -20,11 +20,11 @@ async function main() {
   // Deploy the MintCross contract and pass the deployer address as an argument
   const MintCross = await hre.ethers.getContractFactory("MintCross");
   const MintCrossInstance = await MintCross.connect(deployer).deploy(
-    "0xae92d5aD7583AD66E49A0c67BAd18F6ba52dDDc1", // endpoint
-    10109 // chainId
+    "0xf69186dfBa60DdB133E91E9A4B5673624293d8F8", // Local endpoint
+    10161 // RemoteChainId
   );
   const MintCrossAddress = await MintCrossInstance.getAddress();
-  console.log(`MintCross contract address (Sepolia): ${MintCrossAddress}`);
+  console.log(`MintCross contract address (Mumbai): ${MintCrossAddress}`);
 
   const MintCrossAbi = JSON.stringify({
     address: MintCrossAddress,

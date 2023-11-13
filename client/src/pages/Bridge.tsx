@@ -4,27 +4,28 @@ import {
   useAccount,
   useNetwork,
   useContractWrite,
-  usePrepareContractWrite,
+  usePrepareContractWrite
 } from "wagmi";
+import { parseEther } from "viem";
 import ConnectWallet from "../components/common/ConnectWallet";
 import { useNetworkStore } from "../stores/useNetworkStore";
 import { useMintCrossStore } from "../stores/useMintCrossStore";
 import ABI from "../abis/MintCrossABI.json";
 import { useShallow } from "zustand/react/shallow";
 import { useState, useEffect } from "react";
-import { ethers, BigNumberish } from "ethers";
-// import { ADDRESSES } from "../consts/addresses";
+import { ethers } from "ethers";
+import { ADDRESSES } from "../consts/addresses";
 import { LZ_CHAINIDS } from "../consts/lzChainIds";
-import { CHAIN_IDS } from "../consts/chainIds";
+// import { CHAIN_IDS } from "../consts/chainIds";
 import { estimateGas } from "../utils/estimateGas";
 import { BigNumber } from "bignumber.js";
 
 
 export default function Bridge() {
-  const [lzChainId, setLzChainId] = useState<number | undefined>(undefined);
+  const [toAddress, setToAddress] = useState<string>("");
   const [nativeFee, setNativeFee] = useState<BigNumber>();
   const [amount, setAmount] = useState<number>(0);
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const { chain } = useNetwork();
   const [toggleNetworkModal, connectedNetwork, fromChain, toChain] =
     useNetworkStore(
@@ -40,53 +41,41 @@ export default function Bridge() {
   );
 
   useEffect(() => {
-    const _setLzChainId = () => {
-      if (chain?.id === Number(CHAIN_IDS.sepolia)) {
-        setLzChainId(Number(LZ_CHAINIDS.sepolia));
-      } else if (chain?.id === Number(CHAIN_IDS.mumbai)) {
-        setLzChainId(Number(LZ_CHAINIDS.mumbai));
-      }
-    };
-    console.log('nativeFee', nativeFee)
-    _setLzChainId();
-  }, [chain, isConnected]);
-
-  useEffect(() => {
     const _estimateGas = async () => {
       const data = await estimateGas(
-        lzChainId,
         mintCrossAddress,
-        address,
+        toAddress as `0x${string}`,
         amount * 1e18
       );
 
       setNativeFee(data.nativeFee)
     };
-    console.log('nativeFee2', nativeFee)
-    _estimateGas();
-  }, [amount, isConnected]);
 
-  let adapterParams = ethers.solidityPacked(["uint16", "uint256"], [1, 200000]);
-  let  NATIVE_FEE = nativeFee ? nativeFee.mul(5).div(4) : undefined;
-  let NATIVE_FEE_BIGINT: bigint | undefined = NATIVE_FEE ? BigInt(NATIVE_FEE.toString()) : undefined;
+    _estimateGas();
+    console.log('Calling estimate gas...', nativeFee)
+  }, [isConnected]);
+
+  let  NATIVE_FEE = nativeFee ? Number(nativeFee) / 1e18 : "";
+  let NATIVE_FEE_STR: string = NATIVE_FEE ? NATIVE_FEE.toString() : "";
+  console.log("NATIVE_FEE_STR", NATIVE_FEE_STR)
 
   const { config } = usePrepareContractWrite({
     address: mintCrossAddress,
     abi: ABI.abi,
     functionName: "bridge",
-    args: [amount * 1e18, adapterParams],
+    args: [toAddress, amount * 1e18, ""],
     chainId: chain?.id,
-    value: NATIVE_FEE_BIGINT
+    value: parseEther(NATIVE_FEE_STR, "wei")
   });
 
   // Uncomment only to set the trusted remote addresses
 
-  /*  let trustedRemote = ethers.solidityPacked(
+  /* let trustedRemote = ethers.solidityPacked(
     ["address", "address"],
-    // Remote: Mumbai, Local: Sepolia
+    // Remote: Sepolia, Local: Mumbai
     [
-      ADDRESSES.mumbai,
       ADDRESSES.sepolia,
+      ADDRESSES.mumbai,
     ]
   );
 
@@ -94,7 +83,7 @@ export default function Bridge() {
     address: mintCrossAddress,
     abi: ABI.abi,
     functionName: "setTrustedRemote",
-    args: [LZ_CHAINIDS.mumbai, trustedRemote],
+    args: [LZ_CHAINIDS.sepolia, trustedRemote],
     chainId: chain?.id
   }); */
 
@@ -147,13 +136,23 @@ export default function Bridge() {
       </div>
 
       <div className="flex flex-col items-center space-y-4 w-full">
+        {/* AMOUNT */}
         <div className="flex flex-col w-full">
-          <p className="text-white text-lg font-ibm font-medium">AMOUNT:</p>
+          <label className="text-white text-lg font-ibm font-medium">AMOUNT:</label>
           <input
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
             className=" bg-gray-dark border-2 border-gray-medium rounded-lg p-2 text-white"
-            type="number"
+          />
+        </div>
+        {/* TO ADDRESS */}
+        <div className="flex flex-col w-full">
+          <label className="text-white text-lg font-ibm font-medium">TO ADDRESS :</label>
+          <input
+            value={toAddress}
+            onChange={(e) => setToAddress(e.target.value)}
+            type="text"
+            className=" bg-gray-dark border-2 border-gray-medium rounded-lg p-2 text-white"
           />
         </div>
         {isConnected ? (

@@ -4,7 +4,7 @@ import ConnectWallet from "./ConnectWallet";
 export default function DesktopNav() {
   return (
     <div className="bg-gray-dark w-full flex flex-row justify-around items-center p-8">
-      <h2 className="text-white text-xl font-ibm font-bold">MintCross</h2>
+      <h2 className="text-white text-2xl font-ibm font-bold">MintCross</h2>
       <ul className="flex flex-row justify-center w-fit mx-auto">
         <NavLink
           to="/"

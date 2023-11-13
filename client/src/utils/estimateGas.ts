@@ -3,7 +3,6 @@ import ABI from "../abis/MintCrossABI.json";
 import BigNumber from "bignumber.js"; 
 
 export async function estimateGas(
-  _dstChainId: number | undefined,
   mintCrossAddr: `0x${string}` | undefined,
   toAddress: `0x${string}` | undefined,
   amount: number
@@ -15,16 +14,14 @@ export async function estimateGas(
     );
     const provider = new BrowserProvider(window.ethereum);
     const contract = new Contract(mintCrossAddr as string, ABI.abi, provider);
-    const [nativeFee, zroFee]  = await contract.estimateSendFee(
-      _dstChainId,
+    const { nativeFee, zroFee } = await contract.estimateFee(
       toAddress,
       amount,
-      ethers.ZeroAddress,
       adapterParams
     );
-    console.log("nativeFee", nativeFee)
+    console.log("nativeFee1", nativeFee)
 
-    return { nativeFee: new BigNumber(nativeFee), zroFee: new BigNumber(zroFee) };
+    return { nativeFee: new BigNumber(Number(nativeFee)), zroFee: new BigNumber(Number(zroFee)) };
   } catch (error) {
     throw error;
   }

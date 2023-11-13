@@ -75,7 +75,6 @@ export default function Mint() {
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
             className=" bg-gray-dark border-2 border-gray-medium rounded-lg p-2 text-white"
-            type="number"
           />
         </div>
         {isConnected ? (

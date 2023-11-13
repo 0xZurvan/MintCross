@@ -1,10 +1,11 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-solhint");
 require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.0",
+    version: "0.8.21",
     settings: {
       optimizer: {
         enabled: true,
@@ -23,11 +24,5 @@ module.exports = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     }
-  },
-  hardhat: {
-    chainId: 31337,
-  },
-  localhost: {
-    timeout: 100_000,
   }
 };
