@@ -17,7 +17,7 @@ interface Store {
   ) => Promise<{ nativeFee: BigNumber; zroFee: BigNumber }>;
 }
 
-export const useMintCrossStore = create<Store>()((set, get) => ({
+export const useMintCrossStore = create<Store>()((set) => ({
   //State
   mintCrossAddress: undefined,
   balance: undefined,
