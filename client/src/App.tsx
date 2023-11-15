@@ -4,7 +4,6 @@ import Footer from "./components/common/Footer.tsx";
 import Mint from "./pages/Mint";
 import Bridge from "./pages/Bridge";
 import SwitchNetworkModal from "./components/SwitchNetworkModal";
-import Docs from "./pages/Docs";
 import { Routes, Route } from "react-router-dom";
 import { WagmiConfig, useNetwork, useAccount } from "wagmi";
 import { config } from "./utils/wagmiConfig.ts";
