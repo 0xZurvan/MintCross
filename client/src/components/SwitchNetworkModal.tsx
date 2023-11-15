@@ -17,8 +17,8 @@ function Network({ name, img, onClick }: NetworProps) {
       onClick={onClick}
       className="hover:bg-gray-medium hover:bg-opacity-70 hover:rounded-lg p-4 w-full flex flex-row justify-start space-x-4"
     >
-      <img className="w-8 h-8 rounded-full" src={img} alt="" />
-      <p className="font-ibm font-semibold text-gray-light text-lg">{name}</p>
+      <img className="w-6 lg:w-8 h-6 lg:h-8 rounded-full" src={img} alt="" />
+      <p className="font-ibm font-semibold text-gray-light text-base lg:text-lg">{name}</p>
     </button>
   );
 }
@@ -48,11 +48,11 @@ export default function SwitchNetworkModal() {
   return (
     <>
       {isNetworkModalOpen ? (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 shadow-xl">
           <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40" />
-          <div className="w-[min(30vw)] p-6 bg-gray-dark rounded-lg relative z-50">
+          <div className="w-[min(40vw)] lg:w-[min(30vw)] p-6 bg-gray-dark rounded-lg relative z-50">
             <div className="flex flex-row justify-between items-center">
-              <h2 className="font-ibm font-semibold text-gray-light text-xl text-center">
+              <h2 className="font-ibm font-semibold text-gray-light text-lg lg:text-xl">
                 Compatible Networks
               </h2>
               <button onClick={closeModal}>

@@ -19,7 +19,6 @@ export async function estimateGas(
       amount,
       adapterParams
     );
-    console.log("nativeFee1", nativeFee)
 
     return { nativeFee: new BigNumber(Number(nativeFee)), zroFee: new BigNumber(Number(zroFee)) };
   } catch (error) {

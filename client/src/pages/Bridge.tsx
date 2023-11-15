@@ -4,7 +4,7 @@ import {
   useAccount,
   useNetwork,
   useContractWrite,
-  usePrepareContractWrite
+  usePrepareContractWrite,
 } from "wagmi";
 import { parseEther } from "viem";
 import ConnectWallet from "../components/common/ConnectWallet";
@@ -16,15 +16,14 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ADDRESSES } from "../consts/addresses";
 import { LZ_CHAINIDS } from "../consts/lzChainIds";
-// import { CHAIN_IDS } from "../consts/chainIds";
-import { estimateGas } from "../utils/estimateGas";
+import { CHAIN_IDS } from "../consts/chainIds";
 import { BigNumber } from "bignumber.js";
-
 
 export default function Bridge() {
   const [toAddress, setToAddress] = useState<string>("");
-  const [nativeFee, setNativeFee] = useState<BigNumber>();
+  const [nativeFee, setNativeFee] = useState<BigNumber | string>("");
   const [amount, setAmount] = useState<number>(0);
+  const [lzChain, setLzChain] = useState<number>(0);
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
   const [toggleNetworkModal, connectedNetwork, fromChain, toChain] =
@@ -33,39 +32,48 @@ export default function Bridge() {
         state.toggleNetworkModal,
         state.connectedNetwork,
         state.fromChain,
-        state.toChain,  
+        state.toChain,
       ])
     );
-  const [mintCrossAddress] = useMintCrossStore(
-    useShallow((state) => [state.mintCrossAddress])
+  const [mintCrossAddress, estimateFee] = useMintCrossStore(
+    useShallow((state) => [state.mintCrossAddress, state.estimateFee])
   );
 
   useEffect(() => {
-    const _estimateGas = async () => {
-      const data = await estimateGas(
-        mintCrossAddress,
-        toAddress as `0x${string}`,
-        amount * 1e18
-      );
-
-      setNativeFee(data.nativeFee)
+    if(chain?.id === CHAIN_IDS.sepolia) {
+      setLzChain(LZ_CHAINIDS.sepolia)
+    } else if(chain?.id === CHAIN_IDS.mumbai) {
+      setLzChain(LZ_CHAINIDS.mumbai)
+    }
+  }, [isConnected, chain])
+  
+  useEffect(() => {
+    const _estimateFee = async () => {
+      try {
+        const data = await estimateFee(
+          lzChain,
+          mintCrossAddress,
+          toAddress as `0x${string}`,
+          amount
+        );
+  
+        setNativeFee(String(Number(data.nativeFee) / 1e18));
+      } catch (error) {
+        console.error(error)
+      }
     };
 
-    _estimateGas();
-    console.log('Calling estimate gas...', nativeFee)
-  }, [isConnected]);
+    _estimateFee();
 
-  let  NATIVE_FEE = nativeFee ? Number(nativeFee) / 1e18 : "";
-  let NATIVE_FEE_STR: string = NATIVE_FEE ? NATIVE_FEE.toString() : "";
-  console.log("NATIVE_FEE_STR", NATIVE_FEE_STR)
+  }, [isConnected, amount, toAddress]);
 
   const { config } = usePrepareContractWrite({
     address: mintCrossAddress,
     abi: ABI.abi,
     functionName: "bridge",
-    args: [toAddress, amount * 1e18, ""],
+    args: [toAddress, (amount * 1e18), ""],
     chainId: chain?.id,
-    value: parseEther(NATIVE_FEE_STR, "wei")
+    value: parseEther(nativeFee.toString(), "wei"),
   });
 
   // Uncomment only to set the trusted remote addresses
@@ -95,42 +103,48 @@ export default function Bridge() {
 
   return (
     <div className="flex flex-col items-center space-y-10 bg-gray-dark w-[min(44vw)] mx-auto p-8 rounded-lg">
-      <h1 className="text-white text-3xl font-ibm font-bold text-center">
+      <h1 className="text-white text-xl lg:text-3xl font-ibm font-bold text-center">
         Step 2: Bridge OFT
       </h1>
 
       <div className="flex flex-col space-y-4 w-full">
-        <h2 className="text-white text-lg font-ibm font-medium">
+        <h2 className="text-white text-base lg:text-xl font-ibm font-medium">
           SELECT CHAIN:
         </h2>
         <button
           onClick={openModal}
-          className="w-full flex flex-row justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
+          className="w-full flex flex-col lg:flex-row justify-center lg:justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
         >
           <img className="w-8 h-8" src={connectedNetwork?.path} alt="" />
-          <p className="flex flex-col">
-            <span className="font-ibm font-light text-xl">NETWORK</span>
-            <span>{connectedNetwork?.name}</span>
+          <p className="flex flex-col items-center lg:items-start text-center">
+            <span className="font-ibm font-light text-base lg:text-xl">
+              NETWORK
+            </span>
+            <span className="font-ibm font-bold text-base lg:text-xl">
+              {connectedNetwork?.name}
+            </span>
           </p>
         </button>
 
-        <h2 className="text-white text-lg font-ibm font-medium">BRIDGE:</h2>
+        <h2 className="text-white font-ibm font-medium text-base lg:text-xl">
+          BRIDGE:
+        </h2>
         <button
           onClick={openModal}
-          className="w-full flex flex-row justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
+          className="w-full flex flex-col lg:flex-row justify-center lg:justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
         >
           <img className="w-8 h-8" src={fromChain?.path} alt="" />
-          <p className="flex flex-col">
-            <span className="font-ibm font-light text-xl">FROM:</span>
-            <span>{fromChain?.name}</span>
+          <p className="flex flex-col items-center lg:items-start text-center">
+            <span className="font-ibm font-light text-base lg:text-xl">FROM:</span>
+            <span className="font-ibm font-bold text-base lg:text-xl">{fromChain?.name}</span>
           </p>
         </button>
 
-        <div className="w-full flex flex-row justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg">
+        <div className="w-full flex flex-col lg:flex-row justify-center lg:justify-start items-center  gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg">
           <img className="w-8 h-8" src={toChain?.path} alt="" />
-          <p className="flex flex-col">
-            <span className="font-ibm font-light text-xl">TO:</span>
-            <span>{toChain?.name}</span>
+          <p className="flex flex-col items-center lg:items-start text-center">
+            <span className="font-ibm font-light text-base lg:text-xl">TO:</span>
+            <span className="font-ibm font-bold text-base lg:text-xl">{toChain?.name}</span>
           </p>
         </div>
       </div>
@@ -138,7 +152,9 @@ export default function Bridge() {
       <div className="flex flex-col items-center space-y-4 w-full">
         {/* AMOUNT */}
         <div className="flex flex-col w-full">
-          <label className="text-white text-lg font-ibm font-medium">AMOUNT:</label>
+          <label className="text-white font-ibm font-medium text-base lg:text-xl">
+            AMOUNT:
+          </label>
           <input
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
@@ -147,7 +163,9 @@ export default function Bridge() {
         </div>
         {/* TO ADDRESS */}
         <div className="flex flex-col w-full">
-          <label className="text-white text-lg font-ibm font-medium">TO ADDRESS :</label>
+          <label className="text-white text-base lg:text-xl font-ibm font-medium">
+            TO ADDRESS :
+          </label>
           <input
             value={toAddress}
             onChange={(e) => setToAddress(e.target.value)}
@@ -158,11 +176,11 @@ export default function Bridge() {
         {isConnected ? (
           <Button
             title="BRIDGE"
-            className="w-full text-xl"
+            className="w-full text-lg lg:text-xl"
             onClick={() => write?.()}
           />
         ) : (
-          <ConnectWallet className="w-full" />
+          <ConnectWallet className="w-full text-lg lg:text-xl" />
         )}
 
         <TransactionModal

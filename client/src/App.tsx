@@ -1,4 +1,5 @@
-import DesktopNav from "./components/common/DesktopNav.tsx";
+import DesktopNav from "./components/common/DesktopNav";
+import MobileNav from "./components/common/MobileNav.tsx";
 import Footer from "./components/common/Footer.tsx";
 import Mint from "./pages/Mint";
 import Bridge from "./pages/Bridge";
@@ -43,12 +44,14 @@ function App() {
   return (
     <WagmiConfig config={config}>
       <div className="relative z-[100] flex flex-col space-y-20">
-        <DesktopNav />
+        <div>
+          <MobileNav />
+          <DesktopNav />
+        </div>
         <SwitchNetworkModal />
         <Routes>
           <Route path="/" element={<Mint />}></Route>
           <Route path="/bridge" element={<Bridge />}></Route>
-          <Route path="/docs" element={<Docs />}></Route>
         </Routes>
         <Footer />
       </div>

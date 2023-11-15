@@ -24,7 +24,7 @@ export default function ConnectWallet({ className }: Props) {
       {!isConnected ? (
         <button
           onClick={() => connect({ connector })}
-          className={`${className} bg-gray-dark border-2 border-gray-medium font-ibm font-semibold hover:text-opacity-80 text-purple p-4 rounded-lg`}
+          className={`${className} bg-gray-dark border-2 border-gray-medium font-ibm font-semibold hover:text-opacity-80 text-purple text-sm lg:text-base p-4 rounded-lg`}
         >
           CONNECT WALLET
         </button>

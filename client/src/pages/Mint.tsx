@@ -41,22 +41,22 @@ export default function Mint() {
 
   return (
     <div className="flex flex-col items-center space-y-10 bg-gray-dark w-[min(44vw)] mx-auto p-8 rounded-lg">
-      <h1 className="text-white text-3xl font-ibm font-bold text-center">
+      <h1 className="text-white text-xl lg:text-3xl font-ibm font-bold text-center">
         Step 1: Mint OFT
       </h1>
 
       <div className="flex flex-col space-y-4 w-full">
-        <h2 className="text-white text-lg font-ibm font-medium">
+        <h2 className="text-white text-base lg:text-xl font-ibm font-medium">
           SELECT CHAIN:
         </h2>
         <button
           onClick={openModal}
-          className="w-full flex flex-row justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
+          className="w-full flex flex-col lg:flex-row justify-center lg:justify-start items-center gap-8 bg-gray-dark border-2 border-gray-medium text-start font-ibm font-semibold hover:text-opacity-80 text-gray-light p-4 rounded-lg"
         >
           <img className="w-8 h-8" src={connectedNetwork?.path} alt="" />
-          <p className="flex flex-col">
-            <span className="font-ibm font-light text-xl">NETWORK</span>
-            <span>{connectedNetwork?.name}</span>
+          <p className="flex flex-col items-center lg:items-start text-center">
+            <span className="font-ibm font-light text-base lg:text-xl">NETWORK</span>
+            <span  className="font-ibm font-bold text-base lg:text-xl">{connectedNetwork?.name}</span>
           </p>
         </button>
       </div>
@@ -70,21 +70,21 @@ export default function Mint() {
 
       <div className="flex flex-col items-center space-y-4 w-full">
         <div className="flex flex-col w-full">
-          <p className="text-white text-lg font-ibm font-medium">AMOUNT:</p>
+          <p className="text-white text-base lg:text-xl font-ibm font-medium">AMOUNT:</p>
           <input
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            className=" bg-gray-dark border-2 border-gray-medium rounded-lg p-2 text-white"
+            className="bg-gray-dark border-2 border-gray-medium rounded-lg p-2 text-white"
           />
         </div>
         {isConnected ? (
           <Button
             title="MINT"
-            className="w-full text-xl"
+            className="w-full text-lg lg:text-xl"
             onClick={() => write?.()}
           />
         ) : (
-          <ConnectWallet className="w-full" />
+          <ConnectWallet className="w-full text-lg lg:text-xl" />
         )}
       </div>
     </div>
