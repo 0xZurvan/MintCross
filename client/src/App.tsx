@@ -1,8 +1,6 @@
 import DesktopNav from "./components/common/DesktopNav";
-import MobileNav from "./components/common/MobileNav.tsx";
-import Footer from "./components/common/Footer.tsx";
-import Mint from "./pages/Mint";
-import Bridge from "./pages/Bridge";
+import MobileNav from "./components/common/MobileNav";
+import Footer from "./components/common/Footer";
 import SwitchNetworkModal from "./components/SwitchNetworkModal";
 import { Routes, Route } from "react-router-dom";
 import { WagmiConfig, useNetwork, useAccount } from "wagmi";
@@ -11,6 +9,8 @@ import { useMintCrossStore } from "../src/stores/useMintCrossStore";
 import { useNetworkStore } from "../src/stores/useNetworkStore";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
+import Bridge from "./pages/Bridge.tsx";
+import Mint from "./pages/Mint.tsx";
 
 function App() {
   const { chain } = useNetwork();
@@ -42,16 +42,18 @@ function App() {
 
   return (
     <WagmiConfig config={config}>
-      <div className="relative z-[100] flex flex-col space-y-20">
+      <div className="flex flex-col place-content-between min-h-screen space-y-20">
         <div>
           <MobileNav />
           <DesktopNav />
         </div>
-        <SwitchNetworkModal />
-        <Routes>
-          <Route path="/" element={<Mint />}></Route>
-          <Route path="/bridge" element={<Bridge />}></Route>
-        </Routes>
+        <div>
+          <SwitchNetworkModal />
+          <Routes>
+            <Route path="/" element={<Mint />}></Route>
+            <Route path="/bridge" element={<Bridge />}></Route>
+          </Routes>
+        </div>
         <Footer />
       </div>
     </WagmiConfig>
