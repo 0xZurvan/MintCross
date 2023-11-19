@@ -20,11 +20,21 @@ export default function DesktopNav() {
           to="/bridge"
           className={({ isActive }) =>
             isActive
+              ? "bg-purple text-white text-sm font-ibm font-semibold p-4"
+              : "text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4"
+          }
+        >
+          BRIDGE
+        </NavLink>
+        <NavLink
+          to="/docs"
+          className={({ isActive }) =>
+            isActive
               ? "bg-purple text-white text-sm font-ibm font-semibold p-4 rounded-r-lg"
               : "text-white text-sm hover:bg-gray-medium font-ibm font-semibold p-4 rounded-r-lg"
           }
         >
-          BRIDGE
+          DOCS
         </NavLink>
       </ul>
       <ConnectWallet />

@@ -9,8 +9,9 @@ import { useMintCrossStore } from "../src/stores/useMintCrossStore";
 import { useNetworkStore } from "../src/stores/useNetworkStore";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
-import Bridge from "./pages/Bridge.tsx";
-import Mint from "./pages/Mint.tsx";
+import Bridge from "./pages/Bridge";
+import Mint from "./pages/Mint";
+import Docs from "./pages/Docs";
 
 function App() {
   const { chain } = useNetwork();
@@ -52,6 +53,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Mint />}></Route>
             <Route path="/bridge" element={<Bridge />}></Route>
+            <Route path="/docs" element={<Docs />}></Route>
           </Routes>
         </div>
         <Footer />
